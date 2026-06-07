@@ -1,0 +1,268 @@
+<head>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<script src="script.js"></script>
+</body>
+<link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Rajdhani:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    
+  
+  
+    
+    <div class="app-wrapper">
+
+      <div class="top-bar">
+        <div class="theme-switch-container" onclick="toggleCustomWallpaper()">
+          <div class="theme-switch-slider">
+            <i id="themeIcon" class="fa-solid fa-moon"></i>
+          </div>
+          <div class="switch-lights">
+            <i class="fa-solid fa-moon light-std"></i>
+            <i class="fa-solid fa-sun light-gold"></i>
+            <i class="fa-solid fa-star light-legend"></i>
+          </div>
+        </div>
+      
+        <div class="lang-selector">
+          <i class="fa-solid fa-globe"></i>
+          <select id="langSelect" onchange="changeLanguage(this.value)">
+            <option value="en">English</option>
+            <option value="ro">Română</option>
+            <option value="it">Italiano</option>
+            <option value="es">Español</option>
+            <option value="de">Deutsch</option>
+            <option value="pt">Português</option>
+            <option value="ru">Русский</option>
+            <option value="bg">Български</option>
+            <option value="zh">中文</option>
+            <option value="fr">Français</option>
+            <option value="cs">Čeština</option>
+            <option value="tr">Türkçe</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="app-header">
+        <div class="logo-main">
+          <div class="logo-crown"><i class="fa-solid fa-crown"></i></div>
+          <span class="logo-text">rGdbet</span>
+        </div>
+        <div class="logo-line"></div>
+      </div>
+
+      <div class="social-row">
+        <a href="https://instagram.com" target="_blank" class="social-icon">
+          <i class="fa-brands fa-instagram"></i>
+        </a>
+        <a href="https://facebook.com" target="_blank" class="social-icon">
+          <i class="fa-brands fa-facebook"></i>
+        </a>
+        <a href="https://tiktok.com" target="_blank" class="social-icon">
+          <i class="fa-brands fa-tiktok"></i>
+        </a>
+      </div>
+
+      <a href="https://revolut.me" target="_blank" class="btn-donate" id="donateBtn">
+        ⚡ <span data-i18n="donate">REVOLUT DONATE</span>
+      </a>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <span class="stat-val pos" id="total-p">+0.00</span>
+          <span class="stat-label" data-i18n="net_profit">Net Profit</span>
+        </div>
+        <div class="stat-card">
+          <select id="portfolioSelect" onchange="handlePortfolioChange(this.value)" class="portfolio-select"></select>
+          <input
+            type="number"
+            class="editable-input"
+            id="budget-input"
+            value="1000"
+            oninput="handleDeposit(this.value)"
+          />
+          <span class="stat-label" data-i18n="start_bal">Starting Balance</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-val" id="total-wr">0%</span>
+          <span class="stat-label" data-i18n="win_rate">Win Rate</span>
+          <div class="sub-stat-container">
+            <span class="sub-stat-val" id="total-tickets">0</span>
+            <span class="sub-stat-label" data-i18n="total_tickets">Total Tickets</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div id="form-circles">-</div>
+          <span class="stat-label" data-i18n="recent_form">Recent Form</span>
+        </div>
+      </div>
+
+      <div class="target-card">
+        <div class="stat-label" style="font-size:10px; margin-bottom:8px;" data-i18n="target_goal">
+          Target Goal (RON)
+        </div>
+        <input
+          type="number"
+          class="target-input"
+          id="target-input"
+          value="1000"
+          oninput="updateTargetMeter()"
+        />
+        <div class="progress-bg">
+          <div class="progress-fill" id="targetFill"></div>
+        </div>
+        <div class="stat-label" style="margin-top:8px" id="targetText">
+          0% realized
+        </div>
+      </div>
+
+      <div style="margin: 0 16px 12px;">
+<button class="btn-cashout-glitch">
+    💸 <span data-i18n="cashout_reset">CASHOUT (RESET)</span>
+</button>
+      </div>
+
+      <div class="chart-wrap">
+        <canvas id="mainChart"></canvas>
+      </div>
+
+      <div class="form-card" id="income-calculator">
+        <div class="sec-title">📅 <span data-i18n="income_calc">INCOME CALCULATOR</span></div>
+        <div class="row">
+          <input type="date" id="calc-start" title="Start Date" />
+          <input type="date" id="calc-end" title="End Date" />
+        </div>
+<button class="btn-plasma-blast" onclick="calculatePeriodIncome()">
+    📊 <span data-i18n="calc_btn">CALCULATE</span>
+</button>
+        <div class="odds-bar" id="calcResultBar" style="display:none; justify-content:center;">
+          <span style="color:var(--text2)" data-i18n="calc_result_label">Period Profit:</span>&nbsp;
+          <strong id="calcResultVal" style="font-size:16px;">0.00</strong>
+        </div>
+      </div>
+
+      <div class="form-card" id="sport-distribution-section">
+        <div class="sec-title">📊 <span data-i18n="sport_stats_title">SPORT DISTRIBUTION (PROFIT)</span></div>
+        <div class="chart-wrap" style="height: 220px; margin: 0; background: none; border: none; box-shadow: none; backdrop-filter: none;">
+          <canvas id="sportChart"></canvas>
+        </div>
+      </div>
+
+      <div class="form-card" id="profit-calendar-section">
+        <div class="sec-title">🗓️ <span data-i18n="calendar_title">PROFIT CALENDAR</span></div>
+        <div class="cal-header">
+          <button class="cal-nav-btn" onclick="changeCalMonth(-1)"><i class="fa-solid fa-chevron-left"></i></button>
+          <span id="cal-month-year" style="color: var(--gold); font-weight: 700; letter-spacing: 1px;">-</span>
+          <button class="cal-nav-btn" onclick="changeCalMonth(1)"><i class="fa-solid fa-chevron-right"></i></button>
+        </div>
+        <div class="cal-weekdays">
+          <div>Mo</div><div>Tu</div><div>We</div><div>Th</div><div>Fr</div><div>Sa</div><div>Su</div>
+        </div>
+        <div class="cal-grid" id="cal-grid"></div>
+      </div>
+
+      <div class="form-card">
+        <div class="sec-title">📋 <span data-i18n="place_new">PLACE NEW TICKET</span></div>
+
+        <div class="sport-pills">
+          <div class="sport-pill sel" data-sport-pill="football" onclick="setSport('football', this)">⚽ <span data-i18n="sport_foot_short">Football</span></div>
+          <div class="sport-pill" data-sport-pill="tennis" onclick="setSport('tennis', this)">🎾 <span data-i18n="sport_ten_short">Tennis</span></div>
+          <div class="sport-pill" data-sport-pill="basketball" onclick="setSport('basketball', this)">🏀 <span data-i18n="sport_basket_short">Basketball</span></div>
+          <div class="sport-pill" data-sport-pill="other" onclick="setSport('other', this)">🎮 <span data-i18n="sport_other_short">Other</span></div>
+        </div>
+
+        <div class="row">
+          <input type="text" id="event-name" data-i18n-placeholder="match_name" placeholder="Match / Selection Name" />
+          <input type="number" id="event-odds" step="0.01" data-i18n-placeholder="odds" placeholder="Odds" style="width: 110px;" />
+          <button class="icon-btn" onclick="addEventToTicket()" style="height:39px; border-color:var(--nb); color:var(--nb);">
+            <i class="fa-solid fa-plus"></i>
+          </button>
+        </div>
+
+        <div class="sec-title" style="margin-top:12px;" data-i18n="events_on">EVENTS ON THIS TICKET</div>
+        <select id="bet-type" class="portfolio-select">
+          <option value="solist">Solist (1X2)</option>
+          <option value="cornere">Cornere</option>
+          <option value="cartonase">Cartonașe</option>
+          <option value="goluri">Goluri</option>
+          <option value="goluri-1p">Goluri Prima Repriză</option>
+          <option value="handicap">Handicap</option>
+          <option value="asiatic">Handicap Asiatic</option>
+          <option value="altele">Altele</option>
+        </select>
+
+        <div class="odds-bar" id="totalOddsBar">
+          <span style="color:var(--text2)" id="trans_total_odds">Total Odds:</span>
+          <strong id="totalOddsVal">1.00</strong>
+        </div>
+
+        <div class="sec-title" data-i18n="conf_meter">CONFIDENCE METER</div>
+        <div class="stars-row">
+          <button class="star-btn active" onclick="setConfidence(1)">⭐</button>
+          <button class="star-btn" onclick="setConfidence(2)">⭐</button>
+          <button class="star-btn" onclick="setConfidence(3)">⭐</button>
+          <button class="star-btn" onclick="setConfidence(4)">⭐</button>
+          <button class="star-btn" onclick="setConfidence(5)">⭐</button>
+        </div>
+
+        <input type="date" id="ticket-date" title="Select Date" />
+
+        <input type="text" id="match" data-i18n-placeholder="ticket_name" placeholder="Ticket name (optional)" />
+        <input type="number" id="stake" data-i18n-placeholder="stake" placeholder="Stake (RON)" oninput="updateRiskMeter()" />
+
+        <div class="photo-upload-zone">
+          <button class="icon-btn" onclick="document.getElementById('ticket-photo').click()" style="width: auto; padding: 0 12px; gap: 6px;">
+            <i class="fa-solid fa-camera"></i>
+            <span style="font-size: 13px; font-weight: 600;" data-i18n="add_photo">ADD TICKET PHOTO</span>
+          </button>
+          <input type="file" id="ticket-photo" accept="image/*" style="display: none;" onchange="handlePhotoSelect(this)" />
+          <span id="photo-status" data-i18n="no_file" style="font-size: 12px; color: var(--text3);">No file selected</span>
+        </div>
+
+        <div class="risk-container">
+          <div style="display:flex; justify-content:space-between; font-size:11px; font-weight:700;">
+            <span data-i18n="risk_meter">RISK METER</span>
+            <span id="riskValue" style="color:var(--text3);" data-i18n="risk_low">LOW RISK</span>
+          </div>
+          <div class="risk-bar-bg">
+            <div class="risk-bar-fill" id="riskFill"></div>
+          </div>
+        </div>
+
+        <button class="main-btn" onclick="placeTicket()">📥 <span data-i18n="add_ticket">ADD TICKET</span></button>
+      </div>
+
+      <div class="streak-bar" id="streakBar" style="margin-bottom: 10px;"></div>
+
+      <div class="filter-bar">
+        <button class="filter-btn active" data-filter="all" onclick="setFilter('all', this)" data-i18n="filter_all">ALL</button>
+        <button class="filter-btn f-pending" data-filter="pending" onclick="setFilter('pending', this)" data-i18n="filter_pending">PENDING</button>
+        <button class="filter-btn f-win" data-filter="win" onclick="setFilter('win', this)" data-i18n="filter_win">WIN</button>
+        <button class="filter-btn f-loss" data-filter="loss" onclick="setFilter('loss', this)" data-i18n="filter_loss">LOSS</button>
+      </div>
+
+      <div class="filter-bar" style="margin-top: -4px;">
+        <button class="filter-btn active" data-sport="all" onclick="setSportFilter('all', this)">🏆 <span data-i18n="sport_all">ALL SPORTS</span></button>
+        <button class="filter-btn" data-sport="football" onclick="setSportFilter('football', this)">⚽ <span data-i18n="sport_foot">FOOTBALL</span></button>
+        <button class="filter-btn" data-sport="tennis" onclick="setSportFilter('tennis', this)">🎾 <span data-i18n="sport_ten">TENNIS</span></button>
+        <button class="filter-btn" data-sport="basketball" onclick="setSportFilter('basketball', this)">🏀 <span data-i18n="sport_basket">BASKETBALL</span></button>
+        <button class="filter-btn" data-sport="other" onclick="setSportFilter('other', this)">🎮 <span data-i18n="sport_other">OTHER</span></button>
+      </div>
+
+      <div class="sec-title" style="margin-left:16px;" data-i18n="active_hist">
+        ACTIVE & HISTORY TICKETS
+      </div>
+      <div id="betsContainer"></div>
+
+      <!-- Container Paginație -->
+      <div id="paginationContainer" class="pagination-container"></div>
+
+    </div>
